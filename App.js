@@ -6,11 +6,12 @@ import firebase from 'firebase';
 import TelaInicial from './src/TelaInicial';
 import ConversationScreen from './src/ConersationScreen';
 import Estabelecimento from './src/Estabelecimento'
+import Cateogira from './src/Categorias';
 console.disableYellowBox = true;
 
 const Navegador = TabNavigator({
   Home: {
-    screen: TelaInicial
+    screen: Cateogira
   },
   Estabelecimento: {
     screen: Estabelecimento

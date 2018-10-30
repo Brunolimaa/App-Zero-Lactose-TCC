@@ -8,7 +8,8 @@ import getDirections from 'react-native-google-maps-directions'
 export default class TelaInicial extends Component {
 
     static navigationOptions = ({navigation}) => ({
-		tabBarLabel:"Alimentos",
+        title: "Alimentos",
+        tabBarLabel:"Alimentos",
 		tabBarIcon:({tintColor, focused}) => {
 			if(focused) {
 				return (
