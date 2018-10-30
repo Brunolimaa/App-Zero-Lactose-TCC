@@ -48,9 +48,8 @@ export default class Categoria extends Component {
         return(
             <View style={styles.body}>
                 <FlatList data={this.state.categoria} renderItem={({item})=>{
-              return(   
-                  <Button title="teste" onPress={()=>this.props.navigation.navigate('TelaInicial', {id: item.key})}/>           
-                <TouchableOpacity>
+              return(              
+                <TouchableOpacity onPress={()=>this.props.navigation.navigate('TelaInicial', {id: item.key})}>
                     <View style={styles.filmeArea}>
                         <View>
                             <Text style={styles.nome}>{item.nome}</Text>
