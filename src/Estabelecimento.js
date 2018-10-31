@@ -7,15 +7,15 @@ import getDirections from 'react-native-google-maps-directions'
 export default class Estabelecimento extends Component {
 
     static navigationOptions = ({navigation}) => ({
-        tabBarLabel:"Estabelecimentos",
+        tabBarLabel:"Lojas",
 		tabBarIcon:({tintColor, focused}) => {
 			if(focused) {
 				return (
-					<Image source={require('../assets/images/home_on.png')} style={{width:26, height:26}} />
+					<Image source={require('../assets/images/company.png')} style={{width:56, height:56}} />
 				);
 			} else {
                 return (
-					<Image source={require('../assets/images/home.png')} style={{width:26, height:26}} />
+					<Image source={require('../assets/images/company.png')} style={{width:56, height:56}} />
 				);
 			}	
         }

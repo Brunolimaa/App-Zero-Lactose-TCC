@@ -8,7 +8,7 @@ import getDirections from 'react-native-google-maps-directions'
 export default class TelaInicial extends Component {
 
     static navigationOptions = ({navigation}) => ({
-        title: "Alimentos",
+        //title: "Alimentos"+navigation.state.params.id,
         tabBarLabel:"Alimentos",
 		tabBarIcon:({tintColor, focused}) => {
 			if(focused) {
@@ -136,9 +136,9 @@ export default class TelaInicial extends Component {
             }}
            /> */}
           <FlatList data={this.state.alimentos} renderItem={({item})=>{
-              return(              
+             return(  
                 <TouchableOpacity onPress={()=>this.abrirModal(item)}>
-                    <View style={styles.filmeArea}>
+                    <View style={styles.filmeArea}>     
                         <Image style={styles.filmeImage} source={{uri:item.foto}} style={{borderRadius: 500, width:100, height:100}} />
                         
                         <View>

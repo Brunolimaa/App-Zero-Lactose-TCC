@@ -9,11 +9,11 @@ export default class ConversationScreen extends Component {
 		tabBarIcon:({tintColor, focused}) => {
 			if(focused) {
 				return (
-					<Image source={require('../assets/images/home_on.png')} style={{width:26, height:26}} />
+					<Image source={require('../assets/images/book.png')} style={{width:56, height:56}} />
 				);
 			} else {
                 return (
-					<Image source={require('../assets/images/home.png')} style={{width:26, height:26}} />
+					<Image source={require('../assets/images/book.png')} style={{width:46, height:46}} />
 				);
 			}	
         }
