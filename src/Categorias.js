@@ -6,8 +6,16 @@ export default class Categoria extends Component {
 
     
     static navigationOptions = ({navigation}) => ({
-        title: "Categoria",
+        title: 'Cateogira',
         tabBarLabel:"Alimentos",
+        headerStyle: {
+            backgroundColor: '#03a9f4',
+            height: 70
+        },
+        headerTitle: (
+            <Image source={require('../assets/images/logo.png')} style={{width:90, height:56, marginLeft: 230}}/>
+        ),
+        headerTintColor: '#fff',
 		tabBarIcon:({tintColor, focused}) => {
 			if(focused) {
 				return (

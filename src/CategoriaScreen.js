@@ -11,5 +11,5 @@ const Navegador = StackNavigator({
   TelaInicial: {
     screen:TelaInicial
   }
-})
+});
 export default Navegador;

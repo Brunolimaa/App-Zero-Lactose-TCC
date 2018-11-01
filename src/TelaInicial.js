@@ -10,6 +10,11 @@ export default class TelaInicial extends Component {
     static navigationOptions = ({navigation}) => ({
         //title: "Alimentos"+navigation.state.params.id,
         tabBarLabel:"Alimentos",
+        headerStyle: {
+            backgroundColor: '#03a9f4',
+            height: 70
+        },
+        headerTintColor: '#fff',
 		tabBarIcon:({tintColor, focused}) => {
 			if(focused) {
 				return (

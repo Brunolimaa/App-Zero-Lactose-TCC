@@ -70,14 +70,20 @@ export default class ConversationScreen extends Component {
             <FlatList data={this.state.receitas} renderItem={({item})=>{
                 return(
                     <TouchableOpacity onPress={()=>this.abrirModal(item)}>
-                      <View style={styles.filmeArea}>
+                      {/* <View style={styles.filmeArea}>
                           <Image style={styles.filmeImage} source={{uri:item.foto}} style={{borderRadius: 500, width:100, height:100}} />
                           
                           <View>
                               <Text style={styles.nome}>{item.nome}</Text>
                               <Text style={styles.descricao}>{item.descricao}</Text>
                           </View>
-                      </View>
+                      </View> */}
+                    <View style={styles.filmeArea}>
+                        <View>
+                            <Text style={styles.nome}>{item.nome}</Text>
+                            <Image style={styles.filmeImage} source={{uri:item.foto}} style={{width:400, height:130}} />                        
+                        </View>
+                    </View>
                     </TouchableOpacity>
                 );
             }}/>
@@ -129,13 +135,17 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     nome: {
-        fontSize: 15,
+		fontSize: 15,
         fontWeight: 'bold',
         marginLeft: 10,
         justifyContent: 'center',
         alignItems: 'center',
         width: 190,
-    },
+        color: '#fff',
+        backgroundColor: '#d30c5c',
+        padding: 10,
+        borderRadius: 7
+	},
     loading: {
         justifyContent: 'center',
         alignItems: 'center'
