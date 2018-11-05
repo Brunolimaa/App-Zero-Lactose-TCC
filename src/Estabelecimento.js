@@ -7,6 +7,7 @@ import getDirections from 'react-native-google-maps-directions'
 export default class Estabelecimento extends Component {
 
     static navigationOptions = ({navigation}) => ({
+        title: "Estabelecimentos",
         tabBarLabel:"Lojas",
 		tabBarIcon:({tintColor, focused}) => {
 			if(focused) {
@@ -34,28 +35,36 @@ export default class Estabelecimento extends Component {
               latitude: 37.771707,
               longitude: -122.4053769,
             },
-          ], nomeInput:'', telefoneInput:'', enderecoInput:'', status:false
+          ], nomeInput:'', telefoneInput:'', enderecoInput:'', status:false, inputs:[]
         }
     
-          firebase.database().ref("estabelecimento").once('value').then((snapshot) =>{
-              let state = this.state;
-              this.state.estabelecimentos = [];
+        //   firebase.database().ref("estabelecimento").once('value').then((snapshot) =>{
+        //       let state = this.state;
+        //       this.state.estabelecimentos = [];
   
-              snapshot.forEach((childItem)=>{
-                  if(childItem.val().status != false) {
-                  state.estabelecimentos.push({
-                      key: childItem.key,
-                      nome: childItem.val().nome,
-                      descricao: childItem.val().descricao,
-                      foto: childItem.val().foto,
-                      latitude: childItem.val().latitude,
-                      longitude: childItem.val().longitude
-                  });
-                }
-              });
+        //       snapshot.forEach((childItem)=>{
+        //           if(childItem.val().status != false) {
+        //           state.estabelecimentos.push({
+        //               key: childItem.key,
+        //               nome: childItem.val().nome,
+        //               descricao: childItem.val().descricao,
+        //               foto: childItem.val().foto,
+        //               latitude: childItem.val().latitude,
+        //               longitude: childItem.val().longitude
+        //           });
+        //         }
+        //       });
   
-              this.setState(state);
-          });
+        //       this.setState(state);
+        //   });
+
+        fetch('https://zero-lactose.herokuapp.com/estabelecimentos')
+        .then((r)=>r.json())
+        .then((json)=>{
+            let state = this.state;
+            state.estabelecimentos = json;
+            this.setState(state);
+        });
           
         this.abrirModal = this.abrirModal.bind(this);
         this.fecharModal = this.fecharModal.bind(this);
@@ -95,6 +104,7 @@ export default class Estabelecimento extends Component {
             latitudeSource = data.coords.latitude;
             longitudeSource = data.coords.longitude;
             let accuracy = data.coords.accuracy;
+            alert(latitudeSource);
         }, ()=>{
             //alert("Deu erro...");
         });
@@ -124,15 +134,24 @@ export default class Estabelecimento extends Component {
     }
 
     indicarEstabelecimento(){
-        if(this.state.nomeInput.length > 0 ){
-            let estData = firebase.database().ref("estabelecimento");
-            let chave = estData.push().key;
-            estData.child(chave).set({
-                nome: this.state.nomeInput,
-                telefone: this.state.telefoneInput,
-                endereco: this.state.enderecoInput,
-                status: this.state.status
-            });
+        if(this.state.nomeInput.length > 0 ){          
+            fetch('https://zero-lactose.herokuapp.com/estabelecimentos', {
+                method:'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    nome: this.state.nomeInput,
+                    telefone: this.state.telefoneInput,
+                    endereco: this.state.enderecoInput,
+                    status: this.state.status
+                })
+            })
+                .then((r)=>r.json())
+                .then((json)=>{
+                    //Recarregar Lista
+                })
             this.fecharModal();
             Alert.alert('Estabelecimento em analise...');
         }

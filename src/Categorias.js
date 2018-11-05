@@ -32,22 +32,31 @@ export default class Categoria extends Component {
     constructor(props){
         super(props);
     
-        this.state = {nome: 'carregando...', categoria: [], modalVisible:false}
+        this.state = {nome: 'carregando...', categoria: [], modalVisible:false};
 
-        firebase.database().ref("categoria").once('value').then((snapshot) =>{
-            let state = this.state;
-            this.state.categoria = [];
-
-            snapshot.forEach((childItem)=>{
-                state.categoria.push({
-                    key: childItem.key,
-                    nome: childItem.val().nome,
-                    foto: childItem.val().foto,
-                });
+        fetch('https://zero-lactose.herokuapp.com/categorias')
+            .then((r)=>r.json())
+            .then((json)=>{
+                let state = this.state;
+                state.categoria = json;
+                this.setState(state);
             });
+        
 
-            this.setState(state);
-        });
+        // firebase.database().ref("categoria").once('value').then((snapshot) =>{
+        //     let state = this.state;
+        //     this.state.categoria = [];
+
+        //     snapshot.forEach((childItem)=>{
+        //         state.categoria.push({
+        //             key: childItem.key,
+        //             nome: childItem.val().nome,
+        //             foto: childItem.val().foto,
+        //         });
+        //     });
+
+        //     this.setState(state);
+        // });
 
        
     }
@@ -57,7 +66,7 @@ export default class Categoria extends Component {
             <View style={styles.body}>
                 <FlatList data={this.state.categoria} renderItem={({item})=>{
               return(              
-                <TouchableOpacity onPress={()=>this.props.navigation.navigate('TelaInicial', {id: item.key})}>
+                <TouchableOpacity onPress={()=>this.props.navigation.navigate('TelaInicial', {id: item.id})}>
                     <View style={styles.filmeArea}>
                         <View>
                             <Text style={styles.nome}>{item.nome}</Text>

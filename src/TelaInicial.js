@@ -8,7 +8,7 @@ import getDirections from 'react-native-google-maps-directions'
 export default class TelaInicial extends Component {
 
     static navigationOptions = ({navigation}) => ({
-        //title: "Alimentos"+navigation.state.params.id,
+        title: "Alimentos",
         tabBarLabel:"Alimentos",
         headerStyle: {
             backgroundColor: '#03a9f4',
@@ -32,43 +32,35 @@ export default class TelaInicial extends Component {
       super(props);
   
       this.state = {nome: 'carregando...',lat:-16.2635392, lng:-47.9126896, alimentos: [], modalVisible:false,
-        coordinates: [
-        {
-          latitude: 37.3317876,
-          longitude: -122.0054812,
-        },
-        {
-          latitude: 37.771707,
-          longitude: -122.4053769,
-        },
-      ],
-     
+      loading: true     
     }
       
 
-        //firebase.database().ref("alimentos/1/nome").once('value').then((snapshot)=> {
-        // firebase.database().ref("alimentos/1/nome").on('value', (snapshot)=> {
+    fetch('https://zero-lactose.herokuapp.com/alimentos/categoria/'+this.props.navigation.state.params.id)
+    .then((r)=>r.json())
+    .then((json)=>{
+        let state = this.state;
+        state.alimentos = json;
+        state.loading = false;
+        this.setState(state);
+    });
+
+        // firebase.database().ref("alimentos").once('value').then((snapshot) =>{
         //     let state = this.state;
-        //     state.nome = snapshot.val();
+        //     this.state.alimentos = [];
+
+        //     snapshot.forEach((childItem)=>{
+        //         state.alimentos.push({
+        //             key: childItem.key,
+        //             nome: childItem.val().nome,
+        //             descricao: childItem.val().descricao,
+        //             foto: childItem.val().foto,
+        //             detalhe: childItem.val().detalhe
+        //         });
+        //     });
+
         //     this.setState(state);
         // });
-
-        firebase.database().ref("alimentos").once('value').then((snapshot) =>{
-            let state = this.state;
-            this.state.alimentos = [];
-
-            snapshot.forEach((childItem)=>{
-                state.alimentos.push({
-                    key: childItem.key,
-                    nome: childItem.val().nome,
-                    descricao: childItem.val().descricao,
-                    foto: childItem.val().foto,
-                    detalhe: childItem.val().detalhe
-                });
-            });
-
-            this.setState(state);
-        });
 
         this.abrirModal = this.abrirModal.bind(this);
         this.fecharModal = this.fecharModal.bind(this);
@@ -126,50 +118,49 @@ export default class TelaInicial extends Component {
         this.setState(s);
     }
     render() {
-      return (
-        <View  style={styles.body}>
-          <TextInput placeholder="buscar alimentos..." onChangeText={(nome)=>this.setState({nome})} />
-          {/* <Button title="Pegar Posicao" onPress={this.posicao}/>
-          <Button onPress={this.handleGetDirections} title="Get Directions" /> */}
-          {/* <MapView 
-            style={styles.mapa}
-            region={{
-                latitude: this.state.lat,
-                longitude:this.state.lng,
-                latitudeDelta:0.01,
-                longitudeDelta:0.01
-            }}
-           /> */}
-          <FlatList data={this.state.alimentos} renderItem={({item})=>{
-             return(  
-                <TouchableOpacity onPress={()=>this.abrirModal(item)}>
-                    <View style={styles.filmeArea}>     
-                        <Image style={styles.filmeImage} source={{uri:item.foto}} style={{borderRadius: 500, width:100, height:100}} />
-                        
-                        <View>
-                            <Text style={styles.nome}>{item.nome}</Text>
-                            <Text style={styles.descricao}>{item.detalhe}</Text>
+
+      if(this.state.loading) {
+          return(
+              <View style={[styles.container, styles.loading]}>
+                    <Text style={styles.loadingTxt}>Carregando...</Text>
+              </View>
+          );
+      }  else {
+
+        return (
+            <View  style={styles.body}>
+            <TextInput placeholder="buscar alimentos..." onChangeText={(nome)=>this.setState({nome})} />
+            <FlatList data={this.state.alimentos} renderItem={({item})=>{
+                return(  
+                    <TouchableOpacity onPress={()=>this.abrirModal(item)}>
+                        <View style={styles.filmeArea}>     
+                            <Image style={styles.filmeImage} source={{uri:item.foto}} style={{borderRadius: 500, width:100, height:100}} />
+                            
+                            <View>
+                                <Text style={styles.nome}>{item.nome}</Text>
+                                <Text style={styles.descricao}>{item.detalhe}</Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                );
+            }}/>
+                <Button title="Indicar Alimentos" onPress={this.abrirModalEstabelecimento}/>
+                <Modal animationType="slide" visible={this.state.modalVisible}>
+                    <View style={styles.modal}>
+                        <Button title="X" onPress={this.fecharModal}/>
+                        <View style={styles.detalhesAlimentos}>
+                            <Image style={styles.detalheImage} source={{uri:this.state.foto}} style={{borderRadius: 500, width:200, height:200}} />
+                            
+                            <View>
+                                <Text style={styles.nome}>{this.state.nome}</Text>
+                                <Text style={styles.descricao}>{this.state.descricao}</Text>
+                            </View>
                         </View>
                     </View>
-                </TouchableOpacity>
-              );
-          }}/>
-            <Button title="Indicar Alimentos" onPress={this.abrirModalEstabelecimento}/>
-            <Modal animationType="slide" visible={this.state.modalVisible}>
-                <View style={styles.modal}>
-                    <Button title="X" onPress={this.fecharModal}/>
-                    <View style={styles.detalhesAlimentos}>
-                        <Image style={styles.detalheImage} source={{uri:this.state.foto}} style={{borderRadius: 500, width:200, height:200}} />
-                        
-                        <View>
-                            <Text style={styles.nome}>{this.state.nome}</Text>
-                            <Text style={styles.descricao}>{this.state.descricao}</Text>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-        </View>
-      );
+                </Modal>
+            </View>
+        );
+      }
     }
   }
 
@@ -246,5 +237,13 @@ export default class TelaInicial extends Component {
     detalhesAlimentos: {
         flex: 1,
 		margin:10
+    },
+    loadingTxt: {
+        fontSize: 10,
+        fontWeight: 'bold'
+    },
+    loading: {
+       justifyContent: 'center' ,
+       alignItems: 'center'
     }
 })
