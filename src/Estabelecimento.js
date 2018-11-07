@@ -3,6 +3,7 @@ import { View, Text, Alert, Button, TextInput, Image, FlatList, StyleSheet, Moda
 import firebase from './FirebaseCon';
 import MapView from 'react-native-maps';
 import getDirections from 'react-native-google-maps-directions'
+import LoadingItem from './components/LoadingItem';
 
 export default class Estabelecimento extends Component {
 
@@ -39,7 +40,8 @@ export default class Estabelecimento extends Component {
           estado:0,
           estados: [],
           cidade:0,
-          cidades: []
+          cidades: [],
+          loading: false
         }
     
         //   firebase.database().ref("estabelecimento").once('value').then((snapshot) =>{
@@ -104,6 +106,7 @@ export default class Estabelecimento extends Component {
     buscarCidade(itemValue, itemIndex){
         let state = this.state;
         state.estado = itemValue;
+        state.loading = true;
 
         this.setState(state);
 
@@ -112,6 +115,7 @@ export default class Estabelecimento extends Component {
         .then((json)=>{
             let state = this.state;
             state.cidades = json;
+            state.loading = false;
             this.setState(state);
         });
     }
@@ -120,13 +124,14 @@ export default class Estabelecimento extends Component {
     buscarEstabelecimento(itemValue, itemIndex){
         let state = this.state;
         state.cidade = itemValue;
-
+        state.loading = true;
         this.setState(state);
 
         fetch('https://zero-lactose.herokuapp.com/estabelecimentos/cidade/'+state.cidade)
         .then((r)=>r.json())
         .then((json)=>{
             let state = this.state;
+            state.loading = false;
             state.estabelecimentos = json;
             this.setState(state);
         });
@@ -206,6 +211,7 @@ export default class Estabelecimento extends Component {
         return (
 
           <View  style={styles.body}>
+            <LoadingItem visible={this.state.loading} />
             {/* <Text style={styles.labelPicker}>Estado</Text> */}
             <Picker selectedValue={this.state.estado} onValueChange={(itemValue, itemIndex) => this.buscarCidade(itemValue, itemIndex)}>
                 <Picker.Item key={0} value="0" label="Selecione..."/>

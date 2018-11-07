@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { View, Text,  Button, TextInput, Image, FlatList, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import firebase from './FirebaseCon';
 import MapView from 'react-native-maps';
-import getDirections from 'react-native-google-maps-directions'
-
+import getDirections from 'react-native-google-maps-directions';
+import LoadingItem from './components/LoadingItem';
 
 export default class TelaInicial extends Component {
 
@@ -121,9 +121,7 @@ export default class TelaInicial extends Component {
 
       if(this.state.loading) {
           return(
-              <View style={[styles.container, styles.loading]}>
-                    <Text style={styles.loadingTxt}>Carregando...</Text>
-              </View>
+              <LoadingItem visible={true} />
           );
       }  else {
 
