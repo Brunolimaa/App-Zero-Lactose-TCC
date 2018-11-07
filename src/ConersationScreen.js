@@ -23,14 +23,7 @@ export default class ConversationScreen extends Component {
         super(props);
     
         this.state = {nome: 'carregando...',receitas: [],  modalVisible:false}
-  
-          //firebase.database().ref("alimentos/1/nome").once('value').then((snapshot)=> {
-          // firebase.database().ref("alimentos/1/nome").on('value', (snapshot)=> {
-          //     let state = this.state;
-          //     state.nome = snapshot.val();
-          //     this.setState(state);
-          // });
-  
+
           firebase.database().ref("receitas").once('value').then((snapshot) =>{
               let state = this.state;
               this.state.receitas = [];
@@ -70,14 +63,6 @@ export default class ConversationScreen extends Component {
             <FlatList data={this.state.receitas} renderItem={({item})=>{
                 return(
                     <TouchableOpacity onPress={()=>this.abrirModal(item)}>
-                      {/* <View style={styles.filmeArea}>
-                          <Image style={styles.filmeImage} source={{uri:item.foto}} style={{borderRadius: 500, width:100, height:100}} />
-                          
-                          <View>
-                              <Text style={styles.nome}>{item.nome}</Text>
-                              <Text style={styles.descricao}>{item.descricao}</Text>
-                          </View>
-                      </View> */}
                     <View style={styles.filmeArea}>
                         <View>
                             <Text style={styles.nome}>{item.nome}</Text>

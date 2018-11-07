@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Alert, Button, TextInput, Image, FlatList, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import { View, Text, Alert, Button, TextInput, Image, FlatList, StyleSheet, Modal, TouchableOpacity, Picker } from 'react-native';
 import firebase from './FirebaseCon';
 import MapView from 'react-native-maps';
 import getDirections from 'react-native-google-maps-directions'
@@ -35,7 +35,11 @@ export default class Estabelecimento extends Component {
               latitude: 37.771707,
               longitude: -122.4053769,
             },
-          ], nomeInput:'', telefoneInput:'', enderecoInput:'', status:false, inputs:[]
+          ], nomeInput:'', telefoneInput:'', enderecoInput:'',cidadeInput: '', estadoInput:'', status:false, inputs:[],
+          estado:0,
+          estados: [],
+          cidade:0,
+          cidades: []
         }
     
         //   firebase.database().ref("estabelecimento").once('value').then((snapshot) =>{
@@ -58,18 +62,19 @@ export default class Estabelecimento extends Component {
         //       this.setState(state);
         //   });
 
-        fetch('https://zero-lactose.herokuapp.com/estabelecimentos')
+       fetch('https://zero-lactose.herokuapp.com/estabelecimentos')
         .then((r)=>r.json())
         .then((json)=>{
             let state = this.state;
             state.estabelecimentos = json;
             this.setState(state);
-        });
-          
+        })
+
         this.abrirModal = this.abrirModal.bind(this);
         this.fecharModal = this.fecharModal.bind(this);
         this.abrirModalEstabelecimento = this.abrirModalEstabelecimento.bind(this);
         this.indicarEstabelecimento = this.indicarEstabelecimento.bind(this);
+        this.buscarCidade = this.buscarCidade.bind(this);
     }
 
     abrirModal(item){
@@ -96,6 +101,37 @@ export default class Estabelecimento extends Component {
         this.setState(s);
     }
 
+    buscarCidade(itemValue, itemIndex){
+        let state = this.state;
+        state.estado = itemValue;
+
+        this.setState(state);
+
+        fetch('https://zero-lactose.herokuapp.com/cidades/estado/'+state.estado)
+        .then((r)=>r.json())
+        .then((json)=>{
+            let state = this.state;
+            state.cidades = json;
+            this.setState(state);
+        });
+    }
+
+    
+    buscarEstabelecimento(itemValue, itemIndex){
+        let state = this.state;
+        state.cidade = itemValue;
+
+        this.setState(state);
+
+        fetch('https://zero-lactose.herokuapp.com/estabelecimentos/cidade/'+state.cidade)
+        .then((r)=>r.json())
+        .then((json)=>{
+            let state = this.state;
+            state.estabelecimentos = json;
+            this.setState(state);
+        });
+    } 
+
     handleGetDirections = () => {
         
         let latitudeSource = null;
@@ -104,7 +140,6 @@ export default class Estabelecimento extends Component {
             latitudeSource = data.coords.latitude;
             longitudeSource = data.coords.longitude;
             let accuracy = data.coords.accuracy;
-            alert(latitudeSource);
         }, ()=>{
             //alert("Deu erro...");
         });
@@ -158,9 +193,56 @@ export default class Estabelecimento extends Component {
     }
 
     render() {
+        let cidadesItems = this.state.cidades.map((v, k) => {
+            return <Picker.Item key={k} value={v.id} label={v.nome} />
+        })
+        // if(this.state.estabelecimentos == '') {
+        //     return(
+        //         <View style={[styles.container, styles.loading]}>
+        //                 <Text style={styles.loadingTxt}>Nenhum estabelecimento econtrado!</Text>
+        //         </View>
+        //     );
+        // }
         return (
+
           <View  style={styles.body}>
-            <TextInput placeholder="buscar estabelecimentos..." onChangeText={(nome)=>this.setState({nome})} />
+            {/* <Text style={styles.labelPicker}>Estado</Text> */}
+            <Picker selectedValue={this.state.estado} onValueChange={(itemValue, itemIndex) => this.buscarCidade(itemValue, itemIndex)}>
+                <Picker.Item key={0} value="0" label="Selecione..."/>
+                <Picker.Item key={1} value="1" label="AC"/>
+                <Picker.Item key={2} value="2" label="AL"/>
+				<Picker.Item key={3} value="3" label="AM"/>
+				<Picker.Item key={4} value="4" label="AP"/>
+				<Picker.Item key={5} value="5" label="BA"/>
+				<Picker.Item key={6} value="6" label="CE"/>
+				<Picker.Item key={7} value="7" label="DF"/>
+				<Picker.Item key={8} value="8" label="ES"/>
+				<Picker.Item key={9} value="9" label="GO"/>
+				<Picker.Item key={10} value="10" label="MA"/>
+				<Picker.Item key={11} value="11" label="MG"/>
+				<Picker.Item key={12} value="12" label="MS"/>
+                <Picker.Item key={13} value="13" label="MT"/>
+				<Picker.Item key={14} value="14" label="PA"/>
+				<Picker.Item key={15} value="15" label="PB"/>
+				<Picker.Item key={16} value="16" label="PE"/>
+				<Picker.Item key={17} value="17" label="PI"/>
+				<Picker.Item key={18} value="18" label="PR"/>
+				<Picker.Item key={19} value="19" label="RJ"/>
+				<Picker.Item key={20} value="20" label="RN"/>
+				<Picker.Item key={21} value="21" label="RO"/>
+				<Picker.Item key={22} value="22" label="RR"/>
+				<Picker.Item key={23} value="23" label="RS"/>
+				<Picker.Item key={24} value="24" label="SC"/>
+				<Picker.Item key={25} value="25" label="SE"/>
+				<Picker.Item key={26} value="26" label="SP"/>
+				<Picker.Item key={27} value="27" label="TO"/>
+            </Picker>
+
+
+            <Picker selectedValue={this.state.cidade} onValueChange={(itemValue, itemIndex) => this.buscarEstabelecimento(itemValue, itemIndex)}>
+                {cidadesItems}
+            </Picker>
+            {/* <TextInput placeholder="buscar estabelecimentos..." onChangeText={(nome)=>this.setState({nome})} /> */}
             <FlatList data={this.state.estabelecimentos} renderItem={({item})=>{
                 return(
                     <TouchableOpacity onPress={()=>this.abrirModal(item)}>
@@ -208,6 +290,9 @@ export default class Estabelecimento extends Component {
                         <TextInput placeholder="Nome" onChangeText={(nomeInput)=>this.setState({nomeInput})} />
                         <TextInput placeholder="Telefone" onChangeText={(telefoneInput)=>this.setState({telefoneInput})} />
                         <TextInput placeholder="Endereco" onChangeText={(enderecoInput)=>this.setState({enderecoInput})} />
+                        <TextInput placeholder="Estado" onChangeText={(estadoInput)=>this.setState({estadoInput})} />
+                        <TextInput placeholder="Cidade" onChangeText={(cidadeInput)=>this.setState({cidadeInput})} />
+
                         <Button title="indicar" onPress={this.indicarEstabelecimento}/>
                    </View>
                 </View>
@@ -225,7 +310,8 @@ const styles = StyleSheet.create({
     },
     container: {
         flex:1,
-        marginTop:20
+        backgroundColor: '#fff',
+        padding: 10
     },
     filmeArea: {
         flex: 1,
@@ -292,5 +378,19 @@ const styles = StyleSheet.create({
     detalhesAlimentos: {
         flex: 1,
 		margin:10
+    },
+    loading: {
+		justifyContent: 'center',
+		alignItems: 'center'
+
+	},
+	loadingTxt: {
+		fontSize: 18,
+		fontWeight: 'bold'
+    },
+    labelPicker: {
+        fontSize: 18,
+        //textAlign: 'center',
+        marginBottom: 20
     }
 })
