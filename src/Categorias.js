@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text,  Button, TextInput, Image, FlatList, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import firebase from './FirebaseCon';
+import LoadingItem from './components/LoadingItem';
 
 export default class Categoria extends Component {
 
@@ -32,13 +33,14 @@ export default class Categoria extends Component {
     constructor(props){
         super(props);
     
-        this.state = {nome: 'carregando...', categoria: [], modalVisible:false};
+        this.state = {nome: 'carregando...', categoria: [], modalVisible:false, loading: true};
 
         fetch('https://zero-lactose.herokuapp.com/categorias')
             .then((r)=>r.json())
             .then((json)=>{
                 let state = this.state;
                 state.categoria = json;
+                state.loading = false;
                 this.setState(state);
             });
         
@@ -64,6 +66,7 @@ export default class Categoria extends Component {
     render() {
         return(
             <View style={styles.body}>
+                 <LoadingItem visible={this.state.loading} />
                 <FlatList data={this.state.categoria} renderItem={({item})=>{
               return(              
                 <TouchableOpacity onPress={()=>this.props.navigation.navigate('TelaInicial', {id: item.id})}>
