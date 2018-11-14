@@ -5,8 +5,10 @@ import firebase from 'firebase';
 
 import TelaInicial from './src/TelaInicial';
 import ConversationScreen from './src/ConersationScreen';
-import Estabelecimento from './src/Estabelecimento'
+import Estabelecimento from './src/Estabelecimento';
 import CategoriaScreen from './src/CategoriaScreen';
+import ReceitaScreen from './src/ReceitaScreen';
+
 console.disableYellowBox = true;
 
 const Navegador = TabNavigator({
@@ -32,7 +34,22 @@ const Navegador = TabNavigator({
     screen: Estabelecimento
   },
   Conversa: {
-    screen: ConversationScreen
+    screen: ReceitaScreen,
+    navigationOptions: {
+		  title:"Receitas",
+		  tabBarLabel:"Receitas",
+		  tabBarIcon:({tintColor, focused}) => {			
+        if(focused) {
+          return (
+            <Image source={require('./assets/images/book.png')} style={{width:56, height:56}} />
+          );
+        } else {
+          return (
+            <Image source={require('./assets/images/book.png')} style={{width:56, height:56}} />
+          );
+        }	
+		  }
+    }   
   }
 }, {
   tabBarPosition: 'bottom',

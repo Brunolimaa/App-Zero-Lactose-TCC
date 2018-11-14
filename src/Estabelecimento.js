@@ -268,8 +268,10 @@ export default class Estabelecimento extends Component {
                 <View style={styles.modal}>
                     <Button title="X" onPress={this.fecharModal}/>
                     <View style={styles.detalhesAlimentos}>
-                        <Image style={styles.detalheImage} source={{uri:this.state.foto}} style={{borderRadius: 500, width:200, height:200}} />
-
+                        <Image style={styles.detalheImage} source={{uri:this.state.foto}}  style={{marginLeft: -10, width:360, height:180 }}  />                         
+                        <Text style={styles.nomeLista}>{this.state.nome}</Text>
+                        <Text style={styles.descricao}>{this.state.descricao}</Text>
+                        <TouchableOpacity onPress={this.handleGetDirections}>
                         <MapView 
                             style={styles.mapa}
                             region={{
@@ -279,11 +281,8 @@ export default class Estabelecimento extends Component {
                                 longitudeDelta:0.01
                             }}
                         />
-                         <Button onPress={this.handleGetDirections} title="ir..." />
-                        <View>
-                            <Text style={styles.nome}>{this.state.nome}</Text>
-                            <Text style={styles.descricao}>{this.state.descricao}</Text>
-                        </View>
+                        </TouchableOpacity>
+                        {/* <Button onPress={this.handleGetDirections} title="ir..." /> */}
                     </View>
                 </View>
             </Modal>
@@ -339,12 +338,43 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     nome: {
-        fontSize: 15,
+        // fontSize: 15,
+        // fontWeight: 'bold',
+        // marginLeft: 10,
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        // width: 190,
+        fontSize: 18,
         fontWeight: 'bold',
-        marginLeft: 10,
+        marginTop: 20,
+        marginLeft: 7,
+        justifyContent: 'center',
+        width: 300,
+        color: '#fff',
+        backgroundColor: '#e91e63',
+        padding: 10,
+        height: 50,
+        alignItems: 'center',
+        borderRadius: 20
+    },
+    nomeLista:{
+		// fontSize: 15,
+        // fontWeight: 'bold',
+        // marginLeft: 10,
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        // width: 190,
+        fontSize: 19,
+        fontWeight: 'bold',
+        marginLeft: -10,
         justifyContent: 'center',
         alignItems: 'center',
-        width: 190,
+        width: 360,
+        color: '#fff',
+        backgroundColor: '#2196f3',
+        padding: 10,
+        height: 50,
+        alignItems: 'center'
     },
     loading: {
         justifyContent: 'center',
@@ -367,7 +397,7 @@ const styles = StyleSheet.create({
         marginLeft: 20
     },
     mapa: {
-        width: 400,
+        width: 340,
         height: 100,
         alignItems: 'center',
         justifyContent: 'center',

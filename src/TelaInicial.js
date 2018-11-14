@@ -127,7 +127,7 @@ export default class TelaInicial extends Component {
 
         return (
             <View  style={styles.body}>
-            <TextInput placeholder="buscar alimentos..." onChangeText={(nome)=>this.setState({nome})} />
+            {/* <TextInput placeholder="buscar alimentos..." onChangeText={(nome)=>this.setState({nome})} /> */}
             <FlatList data={this.state.alimentos} renderItem={({item})=>{
                 return(  
                     <TouchableOpacity onPress={()=>this.abrirModal(item)}>
@@ -135,8 +135,8 @@ export default class TelaInicial extends Component {
                             <Image style={styles.filmeImage} source={{uri:item.foto}} style={{borderRadius: 500, width:100, height:100}} />
                             
                             <View>
-                                <Text style={styles.nome}>{item.nome}</Text>
-                                <Text style={styles.descricao}>{item.detalhe}</Text>
+                                <Text style={styles.nomeListaPrincipal}>{item.nome}</Text>
+                                {/* <Text style={styles.descricao}>{item.detalhe}</Text> */}
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -147,10 +147,10 @@ export default class TelaInicial extends Component {
                     <View style={styles.modal}>
                         <Button title="X" onPress={this.fecharModal}/>
                         <View style={styles.detalhesAlimentos}>
-                            <Image style={styles.detalheImage} source={{uri:this.state.foto}} style={{borderRadius: 500, width:200, height:200}} />
+                            <Image style={styles.detalheImage} source={{uri:this.state.foto}}  style={{marginLeft: -10, width:360, height:180 }} />
                             
                             <View>
-                                <Text style={styles.nome}>{this.state.nome}</Text>
+                                <Text style={styles.nomeLista}>{this.state.nome}</Text>
                                 <Text style={styles.descricao}>{this.state.descricao}</Text>
                             </View>
                         </View>
@@ -165,7 +165,7 @@ export default class TelaInicial extends Component {
   const styles = StyleSheet.create({
     body: {
         flex: 1,
-        backgroundColor: '#fff',
+        //backgroundColor: '#fff',
         padding: 10
     },
     container: {
@@ -191,14 +191,39 @@ export default class TelaInicial extends Component {
 		flexDirection: 'column',
 		marginLeft: 10
 	},
-	nome: {
-		fontSize: 15,
+	nomeLista:{
+		// fontSize: 15,
+        // fontWeight: 'bold',
+        // marginLeft: 10,
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        // width: 190,
+        fontSize: 19,
         fontWeight: 'bold',
-        marginLeft: 10,
+        marginLeft: -10,
         justifyContent: 'center',
         alignItems: 'center',
-        width: 190,
-	},
+        width: 360,
+        color: '#fff',
+        backgroundColor: '#2196f3',
+        padding: 10,
+        height: 50,
+        alignItems: 'center'
+    },
+    nomeListaPrincipal:{
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 20,
+        marginLeft: 7,
+        justifyContent: 'center',
+        width: 300,
+        color: '#fff',
+        backgroundColor: '#e91e63',
+        padding: 10,
+        height: 50,
+        alignItems: 'center',
+        borderRadius: 20
+    },
 	loading: {
 		justifyContent: 'center',
 		alignItems: 'center'
@@ -216,8 +241,12 @@ export default class TelaInicial extends Component {
     },
     descricao: {
         flex: 1,
-        width: 190,
-        marginLeft: 20
+        width: 330,
+        fontSize: 15,
+        padding: 10,
+        marginLeft: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     mapa: {
         width: 300,
