@@ -61,7 +61,7 @@ export default class Receita extends Component {
 				<TouchableHighlight underlayColor="#CCCCCC" onPress={this.goBack} style={styles.backButton}>
 					<Image source={require('../assets/images/back.png')} style={styles.backImage} />
 				</TouchableHighlight>
-				<Image source={{uri:this.props.navigation.state.params.imagem}} style={styles.receitaImagem} />
+				<Image source={{uri:this.props.navigation.state.params.image}} style={styles.receitaImagem} />
 				<Abas screenProps={this.props.navigation.state.params} />
 			</View>
 		);

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Alert, Button, TextInput, Image, FlatList, StyleSheet, Modal, TouchableOpacity, Picker } from 'react-native';
+import { View, Text, Alert, Button, TextInput, Image, FlatList, StyleSheet, Modal, TouchableOpacity,TouchableHighlight, Picker } from 'react-native';
 import firebase from './FirebaseCon';
 import MapView from 'react-native-maps';
 import getDirections from 'react-native-google-maps-directions'
@@ -64,11 +64,11 @@ export default class Estabelecimento extends Component {
         //       this.setState(state);
         //   });
 
-       fetch('https://zero-lactose.herokuapp.com/estabelecimentos')
+       fetch('https://zero-lactose.herokuapp.com/categorias/'+this.props.navigation.state.params.id)
         .then((r)=>r.json())
         .then((json)=>{
             let state = this.state;
-            state.estabelecimentos = json;
+            state.estabelecimentos = json.estabelecimentos;
             this.setState(state);
         })
 
@@ -84,6 +84,8 @@ export default class Estabelecimento extends Component {
         s.nome = item.nome;
         s.descricao = item.descricao;
         s.foto = item.foto;
+        s.endereco = item.endereco;
+        s.telefone = item.telefone;
         s.lat = item.latitude;
         s.lng = item.longitude;
         s.modalVisible = true;
@@ -185,7 +187,10 @@ export default class Estabelecimento extends Component {
                     nome: this.state.nomeInput,
                     telefone: this.state.telefoneInput,
                     endereco: this.state.enderecoInput,
-                    status: this.state.status
+                    status: this.state.status,
+                    cidadeDesc: this.state.cidadeInput,
+                    estadoDesc: this.state.estadoInput
+                    // cidade: this.state.cidadeInput
                 })
             })
                 .then((r)=>r.json())
@@ -257,7 +262,7 @@ export default class Estabelecimento extends Component {
                           
                           <View>
                               <Text style={styles.nome}>{item.nome}</Text>
-                              <Text style={styles.descricao}>{item.nome}</Text>
+                              <Text style={styles.descricaoLista}>{item.descricao}</Text>
                           </View>
                       </View>
                     </TouchableOpacity>       
@@ -266,11 +271,16 @@ export default class Estabelecimento extends Component {
             <Button title="Indicar estabelecimento" onPress={this.abrirModalEstabelecimento}/>
             <Modal animationType="fade" visible={this.state.modalVisible}>
                 <View style={styles.modal}>
-                    <Button title="X" onPress={this.fecharModal}/>
                     <View style={styles.detalhesAlimentos}>
+                    <TouchableHighlight underlayColor="#CCCCCC" onPress={this.fecharModal} style={styles.backButton}>
+                            <Image source={require('../assets/images/back.png')} style={styles.backImage} />
+                    </TouchableHighlight>
                         <Image style={styles.detalheImage} source={{uri:this.state.foto}}  style={{marginLeft: -10, width:360, height:180 }}  />                         
                         <Text style={styles.nomeLista}>{this.state.nome}</Text>
                         <Text style={styles.descricao}>{this.state.descricao}</Text>
+                        <Text style={styles.descricao}><Text style={{fontWeight: 'bold'}}>Telefone: </Text>{this.state.telefone}</Text>
+                        <Text style={styles.descricao}><Text style={{fontWeight: 'bold'}}>Endereço: </Text>{this.state.endereco}</Text>
+
                         <TouchableOpacity onPress={this.handleGetDirections}>
                         <MapView 
                             style={styles.mapa}
@@ -297,7 +307,11 @@ export default class Estabelecimento extends Component {
                         <TextInput placeholder="Endereco" onChangeText={(enderecoInput)=>this.setState({enderecoInput})} />
                         <TextInput placeholder="Estado" onChangeText={(estadoInput)=>this.setState({estadoInput})} />
                         <TextInput placeholder="Cidade" onChangeText={(cidadeInput)=>this.setState({cidadeInput})} />
-
+                        {/* <TextInput
+                            {...this.props} // Inherit any props passed to it; e.g., multiline, numberOfLines below
+                            editable = {true}
+                            maxLength = {40}
+                        /> */}
                         <Button title="indicar" onPress={this.indicarEstabelecimento}/>
                    </View>
                 </View>
@@ -321,7 +335,9 @@ const styles = StyleSheet.create({
     filmeArea: {
         flex: 1,
         flexDirection: 'row',
-        margin:10
+        margin:10,
+        borderBottomWidth:1,
+		borderColor:'#CCCCCC'
     },
     filmeImage: {
         width: 80,
@@ -338,24 +354,15 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     nome: {
-        // fontSize: 15,
-        // fontWeight: 'bold',
-        // marginLeft: 10,
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // width: 190,
-        fontSize: 18,
+        fontSize: 19,
         fontWeight: 'bold',
-        marginTop: 20,
-        marginLeft: 7,
+        marginLeft: 10,
         justifyContent: 'center',
-        width: 300,
-        color: '#fff',
-        backgroundColor: '#e91e63',
-        padding: 10,
-        height: 50,
         alignItems: 'center',
-        borderRadius: 20
+        width: 200,
+        color: '#e91e63',
+        padding: 5,
+        alignItems: 'center'
     },
     nomeLista:{
 		// fontSize: 15,
@@ -371,7 +378,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: 360,
         color: '#fff',
-        backgroundColor: '#2196f3',
+        backgroundColor: '#e91e63',
         padding: 10,
         height: 50,
         alignItems: 'center'
@@ -392,21 +399,28 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     descricao: {
+        //flex: 1,
+        margin: 10,
+        width: 300,
+        marginLeft: 10
+    },
+    descricaoLista:{
         flex: 1,
-        width: 190,
-        marginLeft: 20
+        width: 200,
+        marginLeft: 10,
+        padding: 5
     },
     mapa: {
         width: 340,
         height: 100,
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 5
-        //flex:1
+        padding: 5,
+        flex:1
     },modal: {
-       flex:1,
-       paddingTop: 25,
-       alignItems: 'flex-start'
+        flex:1,
+        alignItems: 'flex-start',
+        marginTop: -10
     },
     detalheImage: {
         flex:1,
@@ -428,5 +442,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         //textAlign: 'center',
         marginBottom: 20
-    }
+    },
+    backButton:{
+		width:26,
+		height:26,
+		marginLeft:10,
+		marginTop:20,
+        zIndex:99,
+        position: 'absolute'
+	},
+    backImage:{
+		width:26,
+		height:26
+	}
 })

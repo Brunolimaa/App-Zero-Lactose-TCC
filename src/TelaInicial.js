@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text,  Button, TextInput, Image, FlatList, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import { View, Text,  Button, TextInput, Image, FlatList, StyleSheet, Modal, TouchableOpacity, TouchableHighlight } from 'react-native';
 import firebase from './FirebaseCon';
 import MapView from 'react-native-maps';
 import getDirections from 'react-native-google-maps-directions';
@@ -136,17 +136,20 @@ export default class TelaInicial extends Component {
                             
                             <View>
                                 <Text style={styles.nomeListaPrincipal}>{item.nome}</Text>
-                                {/* <Text style={styles.descricao}>{item.detalhe}</Text> */}
+                                <Text style={styles.descricaoLista}>{item.detalhe}</Text>
                             </View>
                         </View>
                     </TouchableOpacity>
                 );
             }}/>
-                <Button title="Indicar Alimentos" onPress={this.abrirModalEstabelecimento}/>
+                {/* <Button title="Indicar Alimentos" onPress={this.abrirModalEstabelecimento}/> */}
                 <Modal animationType="slide" visible={this.state.modalVisible}>
                     <View style={styles.modal}>
-                        <Button title="X" onPress={this.fecharModal}/>
+                        {/* <Button title="X" onPress={this.fecharModal}/> */}
                         <View style={styles.detalhesAlimentos}>
+                        <TouchableHighlight underlayColor="#CCCCCC" onPress={this.fecharModal} style={styles.backButton}>
+                            <Image source={require('../assets/images/back.png')} style={styles.backImage} />
+                        </TouchableHighlight>
                             <Image style={styles.detalheImage} source={{uri:this.state.foto}}  style={{marginLeft: -10, width:360, height:180 }} />
                             
                             <View>
@@ -175,7 +178,9 @@ export default class TelaInicial extends Component {
 	filmeArea: {
 		flex: 1,
 		flexDirection: 'row',
-		margin:10
+        margin:10,
+        borderBottomWidth:1,
+		borderColor:'#CCCCCC'
 	},
 	filmeImage: {
 		width: 80,
@@ -192,12 +197,6 @@ export default class TelaInicial extends Component {
 		marginLeft: 10
 	},
 	nomeLista:{
-		// fontSize: 15,
-        // fontWeight: 'bold',
-        // marginLeft: 10,
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // width: 190,
         fontSize: 19,
         fontWeight: 'bold',
         marginLeft: -10,
@@ -205,24 +204,27 @@ export default class TelaInicial extends Component {
         alignItems: 'center',
         width: 360,
         color: '#fff',
-        backgroundColor: '#2196f3',
+        backgroundColor: '#e91e63',
         padding: 10,
         height: 50,
         alignItems: 'center'
     },
     nomeListaPrincipal:{
-        fontSize: 18,
+        fontSize: 19,
         fontWeight: 'bold',
-        marginTop: 20,
-        marginLeft: 7,
+        marginLeft: 10,
         justifyContent: 'center',
-        width: 300,
-        color: '#fff',
-        backgroundColor: '#e91e63',
-        padding: 10,
-        height: 50,
         alignItems: 'center',
-        borderRadius: 20
+        width: 200,
+        color: '#e91e63',
+        padding: 5,
+        alignItems: 'center'
+    },
+    descricaoLista:{
+        flex: 1,
+        width: 200,
+        marginLeft: 10,
+        padding: 5
     },
 	loading: {
 		justifyContent: 'center',
@@ -241,29 +243,29 @@ export default class TelaInicial extends Component {
     },
     descricao: {
         flex: 1,
-        width: 330,
+        width: 350,
         fontSize: 15,
         padding: 10,
-        marginLeft: 20,
+        marginLeft: 5,
         justifyContent: 'center',
         alignItems: 'center',
     },
     mapa: {
         width: 300,
         height: 100
-        //flex:1
     },
     modal: {
         flex:1,
-        paddingTop: 25,
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        marginTop: -10
     },
     detalheImage: {
-        flex:1,
+        flex:1
     },
     detalhesAlimentos: {
         flex: 1,
-		margin:10
+        margin:10
+
     },
     loadingTxt: {
         fontSize: 10,
@@ -272,5 +274,17 @@ export default class TelaInicial extends Component {
     loading: {
        justifyContent: 'center' ,
        alignItems: 'center'
-    }
+    },
+	backButton:{
+		width:26,
+		height:26,
+		marginLeft:10,
+		marginTop:20,
+        zIndex:99,
+        position: 'absolute'
+	},
+    backImage:{
+		width:26,
+		height:26
+	}
 })

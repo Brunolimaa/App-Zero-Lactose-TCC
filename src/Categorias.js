@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text,  Button, TextInput, Image, FlatList, StyleSheet, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import firebase from './FirebaseCon';
 import LoadingItem from './components/LoadingItem';
-
+import OneSignal from 'react-native-onesignal'; 
 export default class Categoria extends Component {
 
     
@@ -32,6 +32,13 @@ export default class Categoria extends Component {
 
     constructor(props){
         super(props);
+		OneSignal.setLogLevel(7, 0);
+
+        OneSignal.init("f4bf60bc-a702-4e11-b1fa-26dcd2608a51", {kOSSettingsKeyAutoPrompt : true});
+    
+        OneSignal.addEventListener('received', this.onReceived);
+        OneSignal.addEventListener('opened', this.onOpened);
+        OneSignal.addEventListener('ids', this.onIds);
     
         this.state = {nome: 'carregando...', categoria: [], modalVisible:false, loading: true};
 
@@ -62,39 +69,58 @@ export default class Categoria extends Component {
 
        
     }
+    componentWillUnmount() {
+        OneSignal.removeEventListener('received', this.onReceived);
+        OneSignal.removeEventListener('opened', this.onOpened);
+        OneSignal.removeEventListener('ids', this.onIds);
+      }
+    
+      onReceived(notification) {
+        alert("Notification received: ", notification);
+      }
+    
+      onOpened(openResult) {
+        alert('Message: ', openResult.notification.payload.body);
+        alert('Data: ', openResult.notification.payload.additionalData);
+        alert('isActive: ', openResult.notification.isAppInFocus);
+        alert('openResult: ', openResult);
+      }
+    
+      onIds(device) {
+        alert('Device info: ', device);
+      }
 
     render() {
         return(
             <View style={styles.body}>
                  <LoadingItem visible={this.state.loading} />
-                <FlatList data={this.state.categoria} renderItem={({item})=>{
-              return(              
-                <TouchableOpacity onPress={()=>this.props.navigation.navigate('TelaInicial', {id: item.id})}>
-                    <View style={styles.filmeArea}>
-                        <View>
-                            <Text style={styles.nome}>{item.nome}</Text>
-                            <Image style={styles.filmeImage} source={{uri:item.foto}} style={{marginLeft: -10, width:360, height:180 }} />                        
+
+                 <View style={{flex:1, flexDirection:'row', justifyContent:'flex-start'}}>
+                    <TouchableOpacity style={{flex:1, height: 323}} onPress={()=>this.props.navigation.navigate('CategoriaScreen', {id: 1})}>
+                        <View style={styles.filmeArea}>
+                            <Image style={{flex:1, height: 323}} source={require('../assets/images/zero-lactose.png')}/>                        
                         </View>
-                    </View>
-                </TouchableOpacity>
-              );
-          }}/>
-            {/* <ScrollView pagingEnabled={true}>
-            <View>
-                  <Image
-                        style={{flex: 1, width: 360, height: 535}}
-                        source={require('../assets/images/suco-leg.jpg')}
-                    />
-            
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{flex:1, height: 323}} onPress={()=>this.props.navigation.navigate('CategoriaScreen', {id: 2})}>
+                        <View style={styles.filmeArea}>
+                            <Image style={{flex:1, height: 323}} source={require('../assets/images/sem-gluten.png')}/>                        
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View style={{flex:1, flexDirection:'row', justifyContent:'flex-end'}}>
+                    <TouchableOpacity style={{flex:1, height: 323}} onPress={()=>this.props.navigation.navigate('CategoriaScreen', {id: 3})}>
+                        <View style={styles.filmeArea}>
+                            <Image style={{flex:1, height: 323}} source={require('../assets/images/vegano.png')}/>                        
+                        </View>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={{flex:1, height: 323}} onPress={()=>this.props.navigation.navigate('CategoriaScreen', {id: 4})}>
+                        <View style={styles.filmeArea}>
+                            <Image style={{flex:1, height: 323}} source={require('../assets/images/vegetariano.png')}/>                        
+                        </View>
+                    </TouchableOpacity>
+                 </View>
             </View>
-            <View>
-                <Image
-                style={{flex: 1, width: 360, height: 530}}
-                source={require('../assets/images/padaria-leg.jpg')}
-                />
-            </View>
-            </ScrollView> */}
-        </View>
         );
     }
 }
@@ -102,7 +128,7 @@ export default class Categoria extends Component {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        //backgroundColor: '#fff',
+        backgroundColor: '#fff'
         //padding: 10
     },
     container: {
@@ -112,7 +138,7 @@ const styles = StyleSheet.create({
 	filmeArea: {
 		flex: 1,
 		flexDirection: 'row',
-		margin:10
+		margin:1
 	},
 	filmeImage: {
 		width: 80,

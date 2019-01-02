@@ -12,11 +12,12 @@ export default class ReceitaModo extends Component {
     }
     
     render() {
+        let cont = 0;
         return(
             <View style={styles.areaTab}>
                 <FlatList 
-                    data={this.props.screenProps.modo} 
-                    renderItem={({item}) => <Text style={styles.ingItem}>- Passo {item.key}: {item.txt}</Text>} />
+                    data={this.props.screenProps.modoPreparo} 
+                    renderItem={({item}) => <Text style={styles.ingItem}><Text style={{fontWeight: 'bold'}}>- Passo: </Text> {item.txt}</Text>} />
             </View>
         );
     }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Linking } from 'react-native';
 
 
 export default class ReceitaResumo extends Component {
@@ -17,7 +17,8 @@ export default class ReceitaResumo extends Component {
         return(
             <View style={styles.areaTab}>
                 <Text style={styles.nome}>{this.props.screenProps.nome}</Text>
-                <Text style={styles.por}>Por: {this.props.screenProps.por}</Text>
+                <Text style={styles.por} onPress={() => Linking.openURL(this.props.screenProps.por)}>
+                Por: {this.props.screenProps.por}</Text>
                 <Text style={styles.descricao}>{this.props.screenProps.descricao}</Text>
 
             </View>
